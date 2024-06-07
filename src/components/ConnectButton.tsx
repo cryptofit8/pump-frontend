@@ -13,7 +13,7 @@ import { userInfo } from "@/utils/types";
 export const ConnectButton: FC = () => {
 
   const { user, setUser, login, setLogin, isLoading, setIsLoading } = useContext(UserContext);
-
+  const wallet = useWallet();
   const { visible, setVisible } = useWalletModal();
   const { publicKey, disconnect,connect, signMessage } = useWallet();
 
@@ -21,7 +21,7 @@ export const ConnectButton: FC = () => {
 
   useEffect(() => {
     console.log("ok")
-    if ( publicKey) {
+    if ( publicKey && !login ) {
       console.log(publicKey.toBase58())
       const updatedUser: userInfo = {
         name: publicKey.toBase58().slice(0, 6),
@@ -32,7 +32,7 @@ export const ConnectButton: FC = () => {
       sign(updatedUser);
     }
     console.log("user:",user)
-  }, [publicKey, connect])
+  }, [connect, wallet ])
 
   const sign = async (updatedUser: userInfo) => {
     const connection = await walletConnect({ data: updatedUser });
